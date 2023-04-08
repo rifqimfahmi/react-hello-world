@@ -1,23 +1,24 @@
 import { Dispatch, useState } from "react";
 import { Button } from "react-bootstrap";
 
-interface CounterState {
+interface State {
   count: number;
 }
 
-function increaseCounter(
-  state: CounterState,
-  setState: Dispatch<CounterState>
-) {
+interface Props {
+  initialValue?: number;
+}
+
+function increaseCounter(state: State, setState: Dispatch<State>) {
   setState({ count: state.count + 1 });
 }
 
-function resetCounter(state: CounterState, setState: Dispatch<CounterState>) {
+function resetCounter(state: State, setState: Dispatch<State>) {
   setState({ count: 0 });
 }
 
-const Counter = () => {
-  const [state, setState] = useState<CounterState>({ count: 0 });
+const Counter = ({ initialValue = 0 }: Props) => {
+  const [state, setState] = useState<State>({ count: initialValue });
   return (
     <div>
       <span className="align-middle px-4">{state.count}</span>
