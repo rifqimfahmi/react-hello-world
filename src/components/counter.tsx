@@ -1,4 +1,10 @@
-import { Dispatch, useState } from "react";
+import {
+  Dispatch,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "react-bootstrap";
 
 interface State {
@@ -9,6 +15,10 @@ interface Props {
   initialValue?: number;
 }
 
+export type CounterRef = {
+  reset: () => void;
+};
+
 function increaseCounter(state: State, setState: Dispatch<State>) {
   setState({ count: state.count + 1 });
 }
@@ -17,8 +27,15 @@ function resetCounter(state: State, setState: Dispatch<State>) {
   setState({ count: 0 });
 }
 
-const Counter = ({ initialValue = 0 }: Props) => {
+const Counter = forwardRef<CounterRef, Props>(({ initialValue = 0 }, ref) => {
   const [state, setState] = useState<State>({ count: initialValue });
+  useImperativeHandle(ref, () => {
+    return {
+      reset: () => {
+        resetCounter(state, setState);
+      },
+    };
+  });
   return (
     <div>
       <span className="align-middle px-4">{state.count}</span>
@@ -38,6 +55,6 @@ const Counter = ({ initialValue = 0 }: Props) => {
       </Button>
     </div>
   );
-};
+});
 
 export default Counter;
